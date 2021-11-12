@@ -28,9 +28,9 @@ public class EmployeePayRollController {
 
 	 
 	@PostMapping("/saveemployee")
-	public ResponseEntity<Response> saveEmployee(@Valid @RequestBody EmployeePayRoll contactInfo) {
-		log.info("save method is called ");
-		Response response = employeeServiceImpl.saveEmployeeDetails(contactInfo);
+	public ResponseEntity<Response> saveEmployee(@Valid @RequestBody EmployeePayRoll emp) {
+		log.info("save method is called{} ",emp.toString());
+		Response response = employeeServiceImpl.saveEmployeeDetails(emp);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
