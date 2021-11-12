@@ -9,15 +9,17 @@ import javax.persistence.Id;
 public class EmployeePayRollEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int employeeId;
-	public int getEmployeeId() {
-		return employeeId;
-	}
-	public void setEmployeeId(int employeeId) {
-		this.employeeId = employeeId;
-	}
+	private Long employeeId;
 	private String name;
 	private long salary;
+	
+	public Long getEmployeeId() {
+		return employeeId;
+	}
+	public void setEmployeeId(Long employeeId) {
+		this.employeeId = employeeId;
+	}
+	
 	public String getName() {
 		return name;
 	}
