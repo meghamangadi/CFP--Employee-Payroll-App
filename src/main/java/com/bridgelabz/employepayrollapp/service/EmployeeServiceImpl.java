@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bridgelabz.employepayrollapp.entity.EmployeePayRollEntity;
+import com.bridgelabz.employepayrollapp.exception.EmployeePayrollException;
 import com.bridgelabz.employepayrollapp.model.EmployeePayRoll;
 import com.bridgelabz.employepayrollapp.repository.EmployeePayRollRepository;
 import com.bridgelabz.employepayrollapp.response.Response;
@@ -28,18 +29,27 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
 	@Override
 	public Response getEmployeeByID(Long Id) {
-		Optional<EmployeePayRollEntity> value=employeePayRollRepository.findById(Id);
+		EmployeePayRollEntity value=employeePayRollRepository.findById(Id)
+				.orElseThrow(() -> new EmployeePayrollException("Employee with EmployeeId" + Id
+                + " Doesn't Exists...!"));
 		EmployeePayRoll empDetails=new EmployeePayRoll();
-		empDetails.setName(value.get().getName());
-		empDetails.setSalary(value.get().getSalary());
+		empDetails.setName(value. getName());
+		empDetails.setSalary(value.getSalary());
 		return  new  Response(200 ,"Retrived Employee Details succesfully..!!",empDetails);	}
 
 
 
 	@Override
 	public Response updateEmployeeByID(Long Id, EmployeePayRoll empinfo) {
-		// TODO Auto-generated method stub
-		return null;
+		EmployeePayRollEntity value=employeePayRollRepository.findById(Id)
+				.orElseThrow(() -> new EmployeePayrollException("Employee with EmployeeId" + Id
+                + " Doesn't Exists...!"));
+		EmployeePayRollEntity empEntity=new EmployeePayRollEntity();
+		empEntity.setEmployeeId (value.getEmployeeId());
+		empEntity.setName (value.getName());
+		empEntity.setSalary(value.getSalary());
+		employeePayRollRepository.save(empEntity);
+		return new  Response(200 ,"Employee updated Successfully..!!");
 	}
 
 
