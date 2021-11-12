@@ -5,31 +5,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import lombok.Data;
+
 @Entity
+@Data
 public class EmployeePayRollEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long employeeId;
 	private String name;
-	private long salary;
-	
-	public Long getEmployeeId() {
-		return employeeId;
-	}
-	public void setEmployeeId(Long employeeId) {
-		this.employeeId = employeeId;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public long getSalary() {
-		return salary;
-	}
-	public void setSalary(long salary) {
-		this.salary = salary;
-	}
+	private long salary;	
+	 
 }
