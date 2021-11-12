@@ -1,6 +1,9 @@
 package com.bridgelabz.employepayrollapp.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,7 +28,7 @@ public class EmployeePayRollController {
 
 	 
 	@PostMapping("/saveemployee")
-	public ResponseEntity<Response> saveEmployee(@RequestBody EmployeePayRoll contactInfo) {
+	public ResponseEntity<Response> saveEmployee(@Valid @RequestBody EmployeePayRoll contactInfo) {
 		log.info("save method is called ");
 		Response response = employeeServiceImpl.saveEmployeeDetails(contactInfo);
 		return new ResponseEntity<>(response, HttpStatus.OK);
