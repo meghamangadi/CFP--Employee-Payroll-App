@@ -9,14 +9,17 @@ import com.bridgelabz.employepayrollapp.entity.EmployeePayRollEntity;
 import com.bridgelabz.employepayrollapp.exception.EmployeePayrollException;
 import com.bridgelabz.employepayrollapp.model.EmployeePayRoll;
 import com.bridgelabz.employepayrollapp.repository.EmployeePayRollRepository;
+import com.bridgelabz.employepayrollapp.response.EmployeePayRollResponse;
 import com.bridgelabz.employepayrollapp.response.Response;
+import com.bridgelabz.employepayrollapp.utils.TokenUtils;
 
 @Service
 public class EmployeeServiceImpl implements IEmployeeService {
 
 	@Autowired
 	private EmployeePayRollRepository employeePayRollRepository;
-	
+	 @Autowired
+	 private TokenUtils tokenUtils;
 	@Override
 	public Response saveEmployeeDetails(EmployeePayRoll emp) {
 		EmployeePayRollEntity empEntity=new EmployeePayRollEntity();
@@ -35,11 +38,12 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
 
 	@Override
-	public Response getEmployeeByID(Long Id) {
+	public Response getEmployeeByID(Long Id) {		 
 		EmployeePayRollEntity value=employeePayRollRepository.findById(Id)
 				.orElseThrow(() -> new EmployeePayrollException("Employee with EmployeeId" + Id
-                + " Doesn't Exists...!"));
-		EmployeePayRoll empDetails=new EmployeePayRoll();
+                + " Doesn't Exists...!"));		
+		EmployeePayRollResponse empDetails=new EmployeePayRollResponse();
+		empDetails.setEmployeeId(tokenUtils.createToken(value.getEmployeeId()));
 		empDetails.setName(value. getName());
 		empDetails.setSalary(value.getSalary());
 		empDetails.setGender(value.getGender());
@@ -50,10 +54,28 @@ public class EmployeeServiceImpl implements IEmployeeService {
 		empDetails.setDepartments(value.getDepartments());		 
 		return  new  Response(200 ,"Retrived Employee Details succesfully..!!",empDetails);	}
 
-
+	@Override
+	public Response getEmployeeDetailsByID(String token) {
+		Long Id=tokenUtils.decodeToken(token);
+		EmployeePayRollEntity value=employeePayRollRepository.findById(Id)
+				.orElseThrow(() -> new EmployeePayrollException("Employee with EmployeeId" + Id
+                + " Doesn't Exists...!"));
+		
+		EmployeePayRollResponse empDetails=new EmployeePayRollResponse();
+		empDetails.setEmployeeId(token);
+		empDetails.setName(value. getName());
+		empDetails.setSalary(value.getSalary());
+		empDetails.setGender(value.getGender());
+		empDetails.setNote(value.getNote());
+		empDetails.setProfilePic(value.getProfilePic());
+		empDetails.setStartDate(value.getStartDate());
+		empDetails.setUpdatedDate(value.getUpdatedDate());
+		empDetails.setDepartments(value.getDepartments());		 
+		return  new  Response(200 ,"Retrived Employee Details succesfully..!!",empDetails);	}
 
 	@Override
-	public Response updateEmployeeByID(Long Id, EmployeePayRoll empinfo) {
+	public Response updateEmployeeByID(String token, EmployeePayRoll empinfo) {
+		Long Id=tokenUtils.decodeToken(token);
 		EmployeePayRollEntity value=employeePayRollRepository.findById(Id)
 				.orElseThrow(() -> new EmployeePayrollException("Employee with EmployeeId" + Id
                 + " Doesn't Exists...!"));
@@ -74,7 +96,8 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
 
 	@Override
-	public Response deleteEmployeeByID(Long Id) {
+	public Response deleteEmployeeByID(String token) {
+		Long Id=tokenUtils.decodeToken(token);
 		employeePayRollRepository.deleteById(Id);
 		return new  Response(200 ,"Employee Details Deleted Succesfully..!!");
 	}
@@ -83,7 +106,8 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
 	@Override
 	public Response getAllEmployeeDetails() {
-		List<EmployeePayRollEntity> contacts=  (List<EmployeePayRollEntity>) employeePayRollRepository.findAll();		 
+		List<EmployeePayRollEntity> contacts=  (List<EmployeePayRollEntity>) employeePayRollRepository.findAll();
+		 
 		return new  Response(200 ,"Conatct Details Deleted Succesfully..!!",contacts);
 	}
 

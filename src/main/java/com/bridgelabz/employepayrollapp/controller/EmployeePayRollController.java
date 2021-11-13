@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController; 
 import com.bridgelabz.employepayrollapp.model.EmployeePayRoll;
 import com.bridgelabz.employepayrollapp.response.Response;
 import com.bridgelabz.employepayrollapp.service.EmployeeServiceImpl;
+import com.bridgelabz.employepayrollapp.utils.TokenUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,7 +27,7 @@ public class EmployeePayRollController {
 
 	@Autowired
 	private EmployeeServiceImpl employeeServiceImpl;
-
+	 
 	 
 	@PostMapping("/saveemployee")
 	public ResponseEntity<Response> saveEmployee(@Valid @RequestBody EmployeePayRoll emp) {
@@ -34,31 +36,37 @@ public class EmployeePayRollController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
+	@GetMapping("/getemployeeId/token")
+	public ResponseEntity<Response> getEmployeeDetailsByID(@RequestHeader(name = "token") String token) {
+		log.info("Get the employee details by Id  {}", token);
+		Response response = employeeServiceImpl.getEmployeeDetailsByID(token);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 	@GetMapping("/getemployeeId")
-	public ResponseEntity<Response> getContactByID(@RequestParam Long Id) {
+	public ResponseEntity<Response> getEmployeeByID(@RequestParam Long Id) {
 		log.info("Get the employee details by Id  {}", Id);
 		Response response = employeeServiceImpl.getEmployeeByID(Id);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@GetMapping("/getAllemployees")
-	public ResponseEntity<Response> getAllContact() {
+	public ResponseEntity<Response> getAllEmployeeDetails() {
 		log.info("Get all employee details ");
 		Response response = employeeServiceImpl.getAllEmployeeDetails();
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@PutMapping("/updateemployeeId")
-	public ResponseEntity<Response> updateEmployeetByID(@RequestParam Long Id, @RequestBody EmployeePayRoll emp) {
+	public ResponseEntity<Response> updateEmployeetByID(@RequestHeader(name = "token") String token, @RequestBody EmployeePayRoll emp) {
 		log.info("update employee details ");
-		Response response = employeeServiceImpl.updateEmployeeByID(Id, emp);
+		Response response = employeeServiceImpl.updateEmployeeByID(token, emp);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/deleteemployeeId")
-	public ResponseEntity<Response> deleteEmployeeByID(@RequestParam Long Id) {
+	public ResponseEntity<Response> deleteEmployeeByID(@RequestHeader(name = "token") String token) {
 		log.info("Delet employee details ");
-		Response response = employeeServiceImpl.deleteEmployeeByID(Id);
+		Response response = employeeServiceImpl.deleteEmployeeByID(token);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 

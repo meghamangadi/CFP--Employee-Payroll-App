@@ -25,16 +25,14 @@ public class EmployeePayRoll {
 	@Min(value = 500, message = "Min Wage should be more than 500")
 	private long salary;
 	@Pattern(regexp = "male|female", message = " Gender  needs to be male or female")
-	public String gender;
-	 
-	public LocalDate startDate;
-	 
+	public String gender;	 
+	public LocalDate startDate;      
 	public LocalDate updatedDate;
 	@NotBlank(message = "Note can not be empty")
 	public String note;
 	@NotBlank(message = "profilePic can not be empty")
 	public String profilePic;
-	 
+	@NotNull(message = "department should not be empty")
 	public List<String> departments;
 
 }
