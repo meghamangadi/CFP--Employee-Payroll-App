@@ -1,5 +1,6 @@
 package com.bridgelabz.employepayrollapp.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,8 +108,25 @@ public class EmployeeServiceImpl implements IEmployeeService {
 	@Override
 	public Response getAllEmployeeDetails() {
 		List<EmployeePayRollEntity> contacts=  (List<EmployeePayRollEntity>) employeePayRollRepository.findAll();
-		 
-		return new  Response(200 ,"Conatct Details Deleted Succesfully..!!",contacts);
+		List<EmployeePayRollResponse> contact=new ArrayList<>();
+		for (EmployeePayRollEntity num : contacts) 
+		{
+		
+			String Id=tokenUtils.createToken(num.getEmployeeId());
+			EmployeePayRollResponse emp=new EmployeePayRollResponse();
+			emp.setEmployeeId(Id);
+			emp.setGender(num.getGender());
+			emp.setName(num.getName());
+			emp.setNote(num.getNote());
+			emp.setProfilePic(num.getProfilePic());
+			emp.setSalary(num.getSalary());
+			emp.setStartDate(num.getStartDate());
+			emp.setDepartments(num.getDepartments());
+			contact.add(emp);
+		}
+		
+		
+		return new  Response(200 ,"Conatct Details retrived Succesfully..!!",contact);
 	}
 
 
